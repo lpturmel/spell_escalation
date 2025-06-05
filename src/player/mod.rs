@@ -1,14 +1,12 @@
-use std::time::Duration;
-
 use crate::{
-    assets::ImageAssets,
     gameplay::DespawnTimer,
     materials::{OrbInfusion, FIRE_COLOR, ICE_COLOR, LIGHTNING_COLOR},
     screens::Screen,
     AppSystems, PausableSystems,
 };
 use avian2d::prelude::*;
-use bevy::{platform::collections::HashSet, prelude::*};
+use bevy::prelude::*;
+use std::time::Duration;
 
 pub(super) fn plugin(app: &mut App) {
     app.register_type::<ChargeTimer>();
@@ -93,8 +91,18 @@ fn launch_orb(
         (With<Charging>, With<Orb>),
     >,
     mut charge_timer: ResMut<ChargeTimer>,
+    camera: Query<(&Camera, &GlobalTransform)>,
+    windows: Query<&Window>,
     time: Res<Time>,
 ) {
+    let Ok(window) = windows.single() else {
+        return;
+    };
+
+    let Ok((camera, camera_tf)) = camera.single() else {
+        return;
+    };
+
     let any_charging_orbs = !charging_orbs.is_empty();
 
     if any_charging_orbs {
@@ -103,15 +111,12 @@ fn launch_orb(
             return;
         };
         if keyborad.just_pressed(KeyCode::Digit1) {
-            // orb_sprite.image = assets.fire_orb.clone();
             infusion.add(Element::Fire);
         }
         if keyborad.just_pressed(KeyCode::Digit2) {
-            // orb_sprite.image = assets.ice_orb.clone();
             infusion.add(Element::Ice);
         }
         if keyborad.just_pressed(KeyCode::Digit3) {
-            // orb_sprite.image = assets.lightning_orb.clone();
             infusion.add(Element::Lightning);
         }
 
@@ -131,9 +136,16 @@ fn launch_orb(
             }
 
             let scale = charge_timer.tier_scale();
-            info!("Scale modifier because of timer: {:?}", scale);
 
-            let base_velocity = Vec2::new(0., 1.) * 300.;
+            let Some(cursor) = window
+                .cursor_position()
+                .and_then(|p| camera.viewport_to_world_2d(camera_tf, p).ok())
+            else {
+                commands.entity(orb_ent).despawn();
+                return;
+            };
+
+            let base_velocity = cursor.normalize() * 250.;
 
             **orb_velocity = base_velocity / scale;
 
@@ -155,10 +167,6 @@ fn launch_orb(
             Name::new("Orb"),
             Transform::default(),
             Visibility::default(),
-            // Sprite {
-            //     image: assets.energy_ball.clone(),
-            //     ..default()
-            // },
             Orb,
             LinearVelocity::default(),
             Collider::circle(16.0),
