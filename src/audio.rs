@@ -18,10 +18,10 @@ pub(super) fn plugin(app: &mut App) {
 #[reflect(Component)]
 pub struct Music;
 
-/// A music audio instance.
-pub fn music(handle: Handle<AudioSource>) -> impl Bundle {
-    (AudioPlayer(handle), PlaybackSettings::LOOP, Music)
-}
+///// A music audio instance.
+// pub fn music(handle: Handle<AudioSource>) -> impl Bundle {
+//     (AudioPlayer(handle), PlaybackSettings::LOOP, Music)
+// }
 
 /// An organizational marker component that should be added to a spawned [`AudioPlayer`] if it's in the
 /// general "sound effect" category (e.g. footsteps, the sound of a magic spell, a door opening).
@@ -31,10 +31,10 @@ pub fn music(handle: Handle<AudioSource>) -> impl Bundle {
 #[reflect(Component)]
 pub struct SoundEffect;
 
-/// A sound effect audio instance.
-pub fn sound_effect(handle: Handle<AudioSource>) -> impl Bundle {
-    (AudioPlayer(handle), PlaybackSettings::DESPAWN, SoundEffect)
-}
+///// A sound effect audio instance.
+// pub fn sound_effect(handle: Handle<AudioSource>) -> impl Bundle {
+//     (AudioPlayer(handle), PlaybackSettings::DESPAWN, SoundEffect)
+// }
 
 /// [`GlobalVolume`] doesn't apply to already-running audio entities, so this system will update them.
 fn apply_global_volume(

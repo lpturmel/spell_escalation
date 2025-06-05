@@ -19,21 +19,22 @@ pub struct ImageAssets {
     #[asset(path = "images/energy-ball.png")]
     pub energy_ball: Handle<Image>,
     #[asset(path = "images/fire-orb.png")]
-    pub fire_orb: Handle<Image>,
-    #[asset(path = "images/ice-orb.png")]
-    pub ice_orb: Handle<Image>,
-    #[asset(path = "images/lightning-orb.png")]
-    pub lightning_orb: Handle<Image>,
-
-    #[asset(path = "images/water-icon.png")]
-    pub water_icon: Handle<Image>,
-
+    // pub fire_orb: Handle<Image>,
+    // #[asset(path = "images/ice-orb.png")]
+    // pub ice_orb: Handle<Image>,
+    // #[asset(path = "images/lightning-orb.png")]
+    // pub lightning_orb: Handle<Image>,
+    //
+    // #[asset(path = "images/water-icon.png")]
+    // pub water_icon: Handle<Image>,
     #[asset(path = "templates/menu/pause.html")]
     pub pause_template: Handle<HtmlTemplate>,
 
+    #[cfg(not(target_family = "wasm"))]
     #[asset(path = "templates/menu/main.html")]
     pub main_menu: Handle<HtmlTemplate>,
 
+    #[cfg(target_family = "wasm")]
     #[asset(path = "templates/menu/main_wasm.html")]
     pub main_wasm_menu: Handle<HtmlTemplate>,
 

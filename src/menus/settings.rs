@@ -26,6 +26,8 @@ fn spawn_settings_menu(
     mut html_funcs: HtmlFunctions,
 ) {
     html_funcs.register("back", go_back_on_click);
+    html_funcs.register("lower_global_volume", lower_global_volume);
+    html_funcs.register("raise_global_volume", raise_global_volume);
     commands.spawn((
         Name::new("Settings Menu"),
         GlobalZIndex(2),
@@ -37,12 +39,12 @@ fn spawn_settings_menu(
 const MIN_VOLUME: f32 = 0.0;
 const MAX_VOLUME: f32 = 3.0;
 
-fn lower_global_volume(_: Trigger<Pointer<Click>>, mut global_volume: ResMut<GlobalVolume>) {
+fn lower_global_volume(In(_): In<Entity>, mut global_volume: ResMut<GlobalVolume>) {
     let linear = (global_volume.volume.to_linear() - 0.1).max(MIN_VOLUME);
     global_volume.volume = Volume::Linear(linear);
 }
 
-fn raise_global_volume(_: Trigger<Pointer<Click>>, mut global_volume: ResMut<GlobalVolume>) {
+fn raise_global_volume(In(_): In<Entity>, mut global_volume: ResMut<GlobalVolume>) {
     let linear = (global_volume.volume.to_linear() + 0.1).min(MAX_VOLUME);
     global_volume.volume = Volume::Linear(linear);
 }

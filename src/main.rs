@@ -19,8 +19,6 @@ use bevy_egui::EguiPlugin;
 use bevy_hui::prelude::*;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 
-use self::materials::orb::OrbMaterial;
-
 fn main() -> AppExit {
     App::new().add_plugins(AppPlugin).run()
 }
