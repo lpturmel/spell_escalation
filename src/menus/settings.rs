@@ -2,9 +2,9 @@
 //!
 //! Additional settings and accessibility options should go here.
 
-use bevy::{audio::Volume, input::common_conditions::input_just_pressed, prelude::*, ui::Val::*};
-
-use crate::{menus::Menu, screens::Screen, theme::prelude::*};
+use crate::{assets::ImageAssets, menus::Menu, screens::Screen};
+use bevy::{audio::Volume, input::common_conditions::input_just_pressed, prelude::*};
+use bevy_hui::prelude::*;
 
 pub(super) fn plugin(app: &mut App) {
     app.add_systems(OnEnter(Menu::Settings), spawn_settings_menu);
@@ -20,63 +20,18 @@ pub(super) fn plugin(app: &mut App) {
     );
 }
 
-fn spawn_settings_menu(mut commands: Commands) {
+fn spawn_settings_menu(
+    mut commands: Commands,
+    image_assets: Res<ImageAssets>,
+    mut html_funcs: HtmlFunctions,
+) {
+    html_funcs.register("back", go_back_on_click);
     commands.spawn((
-        widget::ui_root("Settings Menu"),
+        Name::new("Settings Menu"),
         GlobalZIndex(2),
         StateScoped(Menu::Settings),
-        children![
-            widget::header("Settings"),
-            settings_grid(),
-            widget::button("Back", go_back_on_click),
-        ],
+        HtmlNode(image_assets.settings.clone()),
     ));
-}
-
-fn settings_grid() -> impl Bundle {
-    (
-        Name::new("Settings Grid"),
-        Node {
-            display: Display::Grid,
-            row_gap: Px(10.0),
-            column_gap: Px(30.0),
-            grid_template_columns: RepeatedGridTrack::px(2, 400.0),
-            ..default()
-        },
-        children![
-            (
-                widget::label("Master Volume"),
-                Node {
-                    justify_self: JustifySelf::End,
-                    ..default()
-                }
-            ),
-            global_volume_widget(),
-        ],
-    )
-}
-
-fn global_volume_widget() -> impl Bundle {
-    (
-        Name::new("Global Volume Widget"),
-        Node {
-            justify_self: JustifySelf::Start,
-            ..default()
-        },
-        children![
-            widget::button_small("-", lower_global_volume),
-            (
-                Name::new("Current Volume"),
-                Node {
-                    padding: UiRect::horizontal(Px(10.0)),
-                    justify_content: JustifyContent::Center,
-                    ..default()
-                },
-                children![(widget::label(""), GlobalVolumeLabel)],
-            ),
-            widget::button_small("+", raise_global_volume),
-        ],
-    )
 }
 
 const MIN_VOLUME: f32 = 0.0;
@@ -105,7 +60,7 @@ fn update_global_volume_label(
 }
 
 fn go_back_on_click(
-    _: Trigger<Pointer<Click>>,
+    In(_entity): In<Entity>,
     screen: Res<State<Screen>>,
     mut next_menu: ResMut<NextState<Menu>>,
 ) {

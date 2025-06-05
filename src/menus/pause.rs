@@ -1,8 +1,8 @@
 //! The pause menu.
 
+use crate::{assets::ImageAssets, menus::Menu, screens::Screen};
 use bevy::{input::common_conditions::input_just_pressed, prelude::*};
-
-use crate::{menus::Menu, screens::Screen, theme::widget};
+use bevy_hui::prelude::*;
 
 pub(super) fn plugin(app: &mut App) {
     app.add_systems(OnEnter(Menu::Pause), spawn_pause_menu);
@@ -12,17 +12,12 @@ pub(super) fn plugin(app: &mut App) {
     );
 }
 
-fn spawn_pause_menu(mut commands: Commands) {
+fn spawn_pause_menu(mut commands: Commands, image_assets: Res<ImageAssets>) {
     commands.spawn((
-        widget::ui_root("Pause Menu"),
+        Name::new("Pause Menu"),
         GlobalZIndex(2),
         StateScoped(Menu::Pause),
-        children![
-            widget::header("Game paused"),
-            widget::button("Continue", close_menu),
-            widget::button("Settings", open_settings_menu),
-            widget::button("Quit to title", quit_to_title),
-        ],
+        HtmlNode(image_assets.pause_template.clone()),
     ));
 }
 

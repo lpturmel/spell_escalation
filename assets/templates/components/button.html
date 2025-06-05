@@ -1,0 +1,30 @@
+<template>
+    <property name="action">no action</property>
+    <property name="text">no text</property>
+
+    <node>
+        <button
+            id="button"
+            on_press="{action}"
+            background="#FFF"
+            width="200px"
+            height="65px"
+            justify_content="center"
+            align_items="center"
+
+            >
+
+            <text
+                watch="button"
+                font_size="35"
+                font_color="#000"
+                hover:font_color="#752"
+            >
+                {text}
+            </text>
+        </button>
+
+
+    </node>
+
+</template>

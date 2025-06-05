@@ -1,0 +1,39 @@
+<template>
+    <node
+        width="100%"
+        height="100%"
+        display="block"
+        position="relative"
+    >
+        <node
+            display="flex"
+            flex_direction="column"
+            align_items="center"
+            width="350px"
+            height="30%"
+            justify_content="space_evenly"
+            row_gap="30px"
+            position="absolute"
+            right="30%"
+            top="30%"
+            background="#000000c2"
+            border_radius="10px"
+
+        >
+            <text>Game paused</text>
+
+            <menu_btn
+                action="continue"
+                text="Continue"
+            />
+            <menu_btn
+                action="settings"
+                text="Settings"
+            />
+            <menu_btn
+                action="menu"
+                text="Back to menu"
+            />
+        </node>
+    </node>
+</template>

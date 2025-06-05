@@ -1,0 +1,69 @@
+<template>
+    <property name="volume">100</property>
+    <node
+        width="100%"
+        height="100%"
+        justify_content="center"
+        align_items="center"
+        flex_direction="column"
+    >
+        <text
+            font_size="40"
+            font_color="#000"
+        >Settings</text>
+
+
+        <node
+            display="grid"
+            row_gap="10px"
+            column_gap="30px"
+            grid_template_columns="(2, 400px)"
+            >
+
+
+            <node
+                display="flex"
+                justify_content="space_between"
+            >
+                <text>Master Volume</text>
+
+                <node
+                    display="flex"
+                    justify_content="center"
+                >
+                    <button
+                        width="30px"
+                        height="30px"
+                        align_items="center"
+                        justify_content="center"
+                        >
+                        <text>-</text>
+                    </button>
+                    <text
+                        font_color="#000"
+                        hover:font_color="#752"
+                    >
+                        {volume}
+                    </text>
+                    <button
+                        width="30px"
+                        height="30px"
+                        align_items="center"
+                        justify_content="center"
+                        >
+                        <text>+</text>
+                    </button>
+                </node>
+
+            </node>
+
+
+        </node>
+
+        <menu_btn
+            action="back"
+            text="Back"
+        />
+
+    </node>
+</template>

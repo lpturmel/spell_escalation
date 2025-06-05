@@ -3,16 +3,23 @@
 // Disable console on Windows for non-dev builds.
 #![cfg_attr(not(feature = "dev"), windows_subsystem = "windows")]
 
-mod asset_tracking;
+mod assets;
 mod audio;
-mod demo;
 #[cfg(feature = "dev")]
 mod dev_tools;
+mod gameplay;
+mod materials;
 mod menus;
+mod player;
 mod screens;
-mod theme;
 
+use avian2d::prelude::*;
 use bevy::{asset::AssetMetaCheck, prelude::*};
+use bevy_egui::EguiPlugin;
+use bevy_hui::prelude::*;
+use bevy_inspector_egui::quick::WorldInspectorPlugin;
+
+use self::materials::orb::OrbMaterial;
 
 fn main() -> AppExit {
     App::new().add_plugins(AppPlugin).run()
@@ -32,6 +39,7 @@ impl Plugin for AppPlugin {
                     meta_check: AssetMetaCheck::Never,
                     ..default()
                 })
+                .set(ImagePlugin::default_nearest())
                 .set(WindowPlugin {
                     primary_window: Window {
                         title: "Spell Escalation".to_string(),
@@ -45,14 +53,24 @@ impl Plugin for AppPlugin {
 
         // Add other plugins.
         app.add_plugins((
-            asset_tracking::plugin,
+            EguiPlugin {
+                enable_multipass_for_primary_context: true,
+            },
+            HuiPlugin,
+            materials::plugin,
+            PhysicsPlugins::default().with_length_unit(16.0),
+            WorldInspectorPlugin::new(),
+            // asset_tracking::plugin,
+            assets::plugin,
             audio::plugin,
-            demo::plugin,
-            #[cfg(feature = "dev")]
-            dev_tools::plugin,
+        ));
+        #[cfg(feature = "dev")]
+        app.add_plugins((dev_tools::plugin, PhysicsDebugPlugin::default()));
+        app.add_plugins((
             menus::plugin,
             screens::plugin,
-            theme::plugin,
+            gameplay::plugin,
+            player::plugin,
         ));
 
         // Order new `AppSystems` variants by adding them here:
@@ -72,6 +90,8 @@ impl Plugin for AppPlugin {
 
         // Spawn the main camera.
         app.add_systems(Startup, spawn_camera);
+
+        app.insert_resource(Gravity::ZERO);
     }
 }
 
